@@ -5,7 +5,7 @@ const WebSocket = require("ws");
 const bodyParser = require("body-parser");
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 10000;
 
 // Create HTTP server and WebSocket server
 const server = http.createServer(app);
