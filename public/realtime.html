@@ -46,22 +46,22 @@
 
   <script>
     const infoDiv = document.getElementById('info');
-    const ws = new WebSocket(`ws://${window.location.host}`);
+    const wss = new WebSocket(`wss://${window.location.host}`);
 
-    ws.onmessage = (event) => {
+    wss.onmessage = (event) => {
       const data = JSON.parse(event.data);
       infoDiv.innerHTML = formatData(data);
     };
 
-    ws.onopen = () => {
+    wss.onopen = () => {
       console.log('WebSocket connection established');
     };
 
-    ws.onclose = () => {
+    wss.onclose = () => {
       console.log('WebSocket connection closed');
     };
 
-    ws.onerror = (error) => {
+    wss.onerror = (error) => {
       console.error('WebSocket error:', error);
     };
 
