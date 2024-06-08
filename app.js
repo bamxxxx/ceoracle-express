@@ -97,7 +97,7 @@ const html = `
     <section>
       Hello from Render!
       <br/>
-      <div style="font-size:14px;">Now time for some fun...</div>
+      <div style="font-size:14px;">Now time for some fun... why the hell isn't it working?</div>
     </section>
   </body>
 </html>
