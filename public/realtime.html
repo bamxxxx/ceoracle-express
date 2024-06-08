@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time Messages</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    h1 {
+      color: #333;
+    }
+    #info {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .info-item {
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Real-Time Messages</h1>
+  <div id="info"></div>
+
+  <script>
+    const infoDiv = document.getElementById('info');
+    const ws = new WebSocket(`ws://${window.location.host}`);
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      infoDiv.innerHTML = formatData(data);
+    };
+
+    ws.onopen = () => {
+      console.log('WebSocket connection established');
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    function formatData(data) {
+      if (data.message) {
+        return `<div class="info-item"><strong>Message:</strong> ${data.message}</div>`;
+      } else {
+        let html = '';
+        for (const key in data) {
+          if (data.hasOwnProperty(key)) {
+            html += `<div class="info-item"><strong>${key}:</strong> ${data[key]}</div>`;
+          }
+        }
+        return html;
+      }
+    }
+  </script>
+</body>
+</html>

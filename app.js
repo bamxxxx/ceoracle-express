@@ -1,10 +1,51 @@
+const path = require("path");
 const express = require("express");
+const http = require("http");
+const WebSocket = require("ws");
+const bodyParser = require("body-parser");
+
 const app = express();
 const port = process.env.PORT || 3001;
 
-app.get("/", (req, res) => res.type('html').send(html));
+// Create HTTP server and WebSocket server
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
 
-const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+// Middleware to parse JSON bodies
+app.use(bodyParser.json());
+
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Broadcast function
+function broadcast(data) {
+  wss.clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(data));
+    }
+  });
+}
+
+// New incoming message route
+app.post('/incoming', (req, res) => {
+  const message = req.body.message;
+  if (message) {
+    broadcast({ message });
+    res.status(200).send('Message received');
+  } else {
+    res.status(400).send('No message provided');
+  }
+});
+
+// Serve WebSocket connection
+wss.on('connection', (ws) => {
+  ws.send(JSON.stringify({ message: 'WebSocket connection established' }));
+});
+
+// Start the server
+server.listen(port, () => {
+  console.log(`Server is listening at http://localhost:${port}`);
+});
 
 server.keepAliveTimeout = 120 * 1000;
 server.headersTimeout = 120 * 1000;
