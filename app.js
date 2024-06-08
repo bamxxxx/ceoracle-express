@@ -55,6 +55,8 @@ const html = `
   <body>
     <section>
       Hello from Render!
+      <br/>
+      <div style="font-size:14px;">Now time for some fun...</div>
     </section>
   </body>
 </html>
